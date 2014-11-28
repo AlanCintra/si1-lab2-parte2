@@ -1,0 +1,76 @@
+@(metas: List[Meta])
+@import helper._
+@import java.math.BigInteger; var total = 0
+@import java.math.BigInteger; var count = 0
+
+@main("Minhas Metas") {
+
+    <div class="container-fluid">
+        <header class="row" id="cabecalho">
+            <h1>Minhas Metas</h1>
+        </header>
+        <form class="form-horizontal" method="post" action="/metas"><legend>Nova meta:</legend>
+            <div class="control-group">
+                <label class="control-label">Descrição:</label>
+                <div class="controls">
+                    <input name="descricao" type="text" id="meta" placeholder="Descrição" required/><br/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Prioridade:</label>
+                <div class="controls">
+                    <select name="prioridades">
+                        <option value="1">1 - Máxima</option>
+                        <option value="2">2 - Alta</option>
+                        <option value="3">3 - Média</option>
+                        <option value="4">4 - Baixa</option>
+                    </select><br/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Semana:</label>
+                <div class="controls">
+                    <select name="semanas">
+                        <option value="1">Semana 1</option>
+                        <option value="2">Semana 2</option>
+                        <option value="3">Semana 3</option>
+                        <option value="4">Semana 4</option>
+                        <option value="5">Semana 5</option>
+                        <option value="6">Semana 6</option>
+                    </select><br/>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-inverse" type="submit">Adicionar</button>
+                </div>
+            </div>
+        </form>
+
+    <h3>Metas a Alcançar</h3>
+        @for(count <- 1 to 6) {
+            @(total = 0)
+            <h4>Semana @count:</h4>
+            @for(meta <- metas) {
+                @if(meta.getSemana() == Integer.toString(count)) {
+                    <ul>
+                        <li>
+                            <div class="button-bar">
+                                <span class="meta" id="@meta.getId()">@meta.getDescricao() - Prioridade: @meta.getPrioridade - Semana: @meta.getSemana()</span>
+                                @form(routes.Application.deletaMeta(meta.getId())) {
+                                    <div class="alinhar">
+                                        <input class="apaga" type="submit" value="Apagar"/>
+                                        <button type="button" onclick="mudaMeta(@meta.getId(), this)" class="apaga">Alcançada</button>
+                                    </div>
+                                }
+
+                            </div>
+                        </li>
+                        @(total+=1)
+                    </ul>
+                }
+            }
+            <p>Total de Metas: @total</p>
+        }
+    </div>
+}
