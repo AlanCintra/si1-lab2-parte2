@@ -1,7 +1,9 @@
 @(metas: List[Meta])
 @import helper._
 @import java.math.BigInteger; var total = 0
-@import java.math.BigInteger; var count = 0
+@import java.math.BigInteger; var i = 0
+@import java.math.BigInteger; var alcancadas = 0;
+@import java.math.BigInteger; var naoAlcancadas = 0;
 
 @main("Minhas Metas") {
 
@@ -48,21 +50,33 @@
         </form>
 
     <h3>Metas a Alcançar</h3>
-        @for(count <- 1 to 6) {
+        @for(i <- 1 to 6) {
             @(total = 0)
-            <h4>Semana @count:</h4>
+            @(alcancadas = 0)
+            @(naoAlcancadas = 0)
+            <h4>Semana @i:</h4>
             @for(meta <- metas) {
-                @if(meta.getSemana() == Integer.toString(count)) {
+                @if(meta.getSemana() == Integer.toString(i)) {
                     <ul>
                         <li>
-                            <div class="button-bar">
-                                <span class="meta" id="@meta.getId()">@meta.getDescricao() - Prioridade: @meta.getPrioridade - Semana: @meta.getSemana()</span>
-                                @form(routes.Application.deletaMeta(meta.getId())) {
-                                    <div class="alinhar">
-                                        <input class="apaga" type="submit" value="Apagar"/>
-                                        <button type="button" onclick="mudaMeta(@meta.getId(), this)" class="apaga">Alcançada</button>
-                                    </div>
+                            <div>
+                                @if(meta.alcancada()) {
+                                    @(alcancadas+=1)
+                                    <span class="metaAlcancada" id="@meta.getId()">@meta.getDescricao() - Prioridade: @meta.getPrioridade - Semana: @meta.getSemana()</span>
+                                }else {
+                                    @(naoAlcancadas+=1)
+                                    <span class="meta" id="@meta.getId()">@meta.getDescricao() - Prioridade: @meta.getPrioridade - Semana: @meta.getSemana()</span>
                                 }
+                                <div class="alinhar">
+                                    @form(routes.Application.deletaMeta(meta.getId())) {
+                                        <input class="apaga" type="submit" value="Apagar"/>
+                                    }
+                                    @if(!meta.alcancada()) {
+                                        @form(routes.Application.destacaMetaAlcancada(meta.getId)) {
+                                            <button onclick="mudaMeta ( @meta.getId(), this)" class="apaga">Alcançada</button>
+                                        }
+                                }
+                                </div>
 
                             </div>
                         </li>
@@ -71,6 +85,8 @@
                 }
             }
             <p>Total de Metas: @total</p>
+            <p>Total de Metas Alcançadas: @alcancadas</p>
+            <p>Total de Metas Não Alcançadas: @naoAlcancadas</p>
         }
     </div>
 }

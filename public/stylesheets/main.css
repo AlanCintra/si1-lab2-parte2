@@ -14,5 +14,9 @@ legend {
 }
 
 .alinhar {
-    display: inline-table;
+    display: flex;
+}
+
+.metaAlcancada {
+    font-weight: bold;
 }

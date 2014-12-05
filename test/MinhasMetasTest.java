@@ -1,10 +1,16 @@
-import static org.fest.assertions.Assertions.*;
 
+import static org.fest.assertions.Assertions.*;
+import static play.test.Helpers.callAction;
+import static play.test.Helpers.fakeRequest;
+
+import controllers.Application;
 import models.Meta;
 import models.dao.GenericDAO;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Alan on 21/11/2014.
@@ -45,48 +51,34 @@ public class MinhasMetasTest extends AbstractTest {
     }
 
     @Test
-    public void deveSalvarMetaNaSemana3() throws  Exception {
-        Meta meta = new Meta("Estudar SI1", "Baixa", "3");
-        dao.persist(meta);
-
-        assertThat(meta.getSemana()).isEqualTo("3");
-    }
-
-    @Test
-    public void deveSalvarMetaNaSemana4() throws  Exception {
-        Meta meta = new Meta("Estudar Física Moderna", "Baixa", "4");
-        dao.persist(meta);
-
-        assertThat(meta.getSemana()).isEqualTo("4");
-    }
-
-    @Test
-    public void deveSalvarMetaNaSemana5() throws  Exception {
-        Meta meta = new Meta("Estudar Álgebra Linear", "Baixa", "5");
-        dao.persist(meta);
-
-        assertThat(meta.getSemana()).isEqualTo("5");
-    }
-
-    @Test
-    public void deveSalvarMetaNaSemana6() throws  Exception {
-        Meta meta = new Meta("Estudar Probabilidade", "Baixa", "6");
-        dao.persist(meta);
-
-        assertThat(meta.getSemana()).isEqualTo("6");
-    }
-
-    @Test
     public void deveRemoverMetaDoBD() throws  Exception {
-        Meta meta = new Meta("Estudar Probabilidade", "Baixa", "6");
-        dao.persist(meta);
+        Map<String, String> form = new HashMap<>();
+        form.put("descricao", "Estudar SI1");
+        form.put("prioridades", "1");
+        form.put("semanas", "1");
+        callAction(controllers.routes.ref.Application.criaMeta(), fakeRequest().withFormUrlEncodedBody(form));
+
         List<Meta> metas = dao.findAllByClassName(Meta.class.getName());
 
         assertThat(metas.size()).isEqualTo(1);
 
-        dao.delete(meta.getId());
-        dao.flush();
+        callAction(controllers.routes.ref.Application.deletaMeta(metas.get(0).getId()), fakeRequest());
+        metas = dao.findAllByClassName(Meta.class.getName());
         assertThat(metas.size()).isEqualTo(0);
     }
 
+    @Test
+    public void deveDestacarMeta() throws  Exception {
+        Map<String, String> form = new HashMap<>();
+        form.put("descricao", "Estudar SI1");
+        form.put("prioridades", "1");
+        form.put("semanas", "1");
+        callAction(controllers.routes.ref.Application.criaMeta(), fakeRequest().withFormUrlEncodedBody(form));
+
+        List<Meta> metas = dao.findAllByClassName(Meta.class.getName());
+
+        assertThat(metas.get(0).alcancada()).isFalse();
+        metas.get(0).setAlcancada();
+        assertThat(metas.get(0).alcancada()).isTrue();
+    }
 }

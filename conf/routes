@@ -4,8 +4,6 @@
 
 # Home page
 GET         /                        controllers.Application.index()
-
-# Metas
 POST        /metas                   controllers.Application.criaMeta()
 POST        /metas/:id/deleta        controllers.Application.deletaMeta(id: Long)
 POST        /metas/:id/destaca       controllers.Application.destacaMetaAlcancada(id: Long)
