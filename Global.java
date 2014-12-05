@@ -33,7 +33,6 @@ public class Global extends GlobalSettings {
                 Meta meta8 = new Meta("Estudar Lógica", "3", "3");
                 Meta meta9 = new Meta("Estudar Física Moderna", "3", "3");
                 Meta meta10 = new Meta("Estudar Álgebra Linear", "3", "3");
-                Meta meta11 = new Meta("Estudar Álgebra Linear", "3", "3");
 
                 dao.persist(meta);
                 dao.persist(meta2);
