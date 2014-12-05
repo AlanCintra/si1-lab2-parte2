@@ -16,5 +16,3 @@ libraryDependencies ++= Seq(
   "org.hibernate" % "hibernate-entitymanager" % "4.2.3.Final"
 )
 
-lol
-
